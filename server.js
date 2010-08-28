@@ -27,5 +27,9 @@ with(fab)
     (app.static.html, 'create')
   ()
 
+  (route, /^\/favicon.ico$/)
+    (app.static, 'public', null, 'ico', 'favicon')
+  ()
+
   ('Hi')
 ()
