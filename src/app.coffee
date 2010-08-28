@@ -28,11 +28,11 @@ exports.redirect_to = (write, url, status) ->
 # Returns a fab app.
 exports.static = (write, dir, type, ext, name) ->
   write(undefined, headers: {"Content-Type": type}) (write, head) ->
-    name ||= head.url.capture[0]
-    if path.extname(name) != ".#{ext}"
-      name = "#{name}.#{ext}"
+    filename = name || head.url.capture[0]
+    if path.extname(filename) != ".#{ext}"
+      filename = "#{name}.#{ext}"
     fab.stream (stream) ->
-      io = fs.createReadStream "./#{dir}/#{name}"
+      io = fs.createReadStream "./#{dir}/#{filename}"
       io.on 'data', (s) -> stream write(s)
       io.on 'end',  ()  -> stream write()
 
