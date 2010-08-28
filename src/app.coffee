@@ -36,6 +36,7 @@ exports.static = (write, dir, type, ext, name) ->
     fab.stream (stream) ->
       fs.stat full, (err, stats) ->
         if err
+          console.log err
           stream write(
             err
             status: 404
