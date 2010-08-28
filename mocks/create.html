@@ -1,0 +1,57 @@
+
+<!DOCTYPE html> 
+
+<html> 
+  <head> 
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/> 
+    <title>Editing home</title> 
+  </head> 
+ 
+  <body> 
+    <div id="main"> 
+      <div class="site"> 
+        <div id="guides"> 
+          <div class="write"> 
+  <a href="/Home">&laquo; Back</a> 
+  <h1>Editing home</h1> 
+ 
+  <form class="edit_wiki" method="post" action="/edit/Home"> 
+    <div> 
+      <label> 
+        Title<br /> 
+        <input class="text" type="text" name="rename" value="Home" /> 
+      </label> 
+      <br /> 
+ 
+      <div id="wiki-form" class="comment-form wiki-form"> 
+        <ul class="tabs inline-tabs"> 
+          <li><a href="#write_bucket" action="write">Write</a></li> 
+          <li><a href="#preview_bucket" action="preview">Preview</a></li> 
+        </ul> 
+        <div id="write_bucket" class="tab-content"> 
+          <div class="inner"> 
+            <textarea name="content"># Asynchronous Coding For My Tiny Ruby Brain #
+
+by rick olson  
+pdx javascript admirers, 24 Feb 2010  
+[http://github.com/technoweenie/pdxjs-twitter-node](http://github.com/technoweenie/pdxjs-twitter-node)  
+[http://pdxjs-twitter-node.heroku.com](http://pdxjs-twitter-node.heroku.com)
+</textarea> 
+          </div> 
+        </div> 
+        <div id="preview_bucket" class="tab-content content-body content wikistyle gollum"> 
+          <p>Loading content...</p> 
+        </div> 
+      </div> 
+
+      <div class="actions"> 
+        <input type="submit" value="Save page" /> 
+      </div> 
+    </div> 
+  </form> 
+</div> 
+        </div> 
+      </div> 
+    </div> 
+  </body> 
+</html> 
