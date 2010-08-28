@@ -46,42 +46,45 @@ function setupPreso(load_slides, slides_prefix, sh_js_prefix) {
 function loadSlides(load_slides, slides_prefix, sh_js_prefix) {
   //load slides offscreen, wait for images and then initialize
   if (load_slides) {
-  	$("#slides").load(slides_prefix+"/slides", false, function(){
-  	  loadSlides(false, null, sh_js_prefix)
-  	})
+    $("#slides").load(slides_prefix+"/slides", false, function(){
+      loadSlides(false, null, sh_js_prefix)
+    })
   } else {
-	$("#slides img").batchImageLoad({
-		loadingCompleteCallback: initializePresentation(sh_js_prefix)
-	})
+    $("#slides img").batchImageLoad({
+      loadingCompleteCallback: initializePresentation(sh_js_prefix)
+    })
   }
 }
 
 function addSlide(slide) {
   jSlide = $(slide)
+  slides.push(jSlide)
 
   //center slides offscreen
   centerSlide(jSlide)
   jSlide.appendTo($('#preso'))
+  addToMenu(jSlide)
   slideTotal += 1
 }
 
-function initializeSlides() {
+function initializePresentation(prefix) {
   $("#preso").empty()
   slideTotal = 0
+  slides     = []
 
+  resetMenu()
   $('#slides > .slide').each(function(s, slide) {
     addSlide(slide)
   });
 
-  //populate vars
-  slides = $('#preso > .slide')
+  $('#slides').empty()
 
   //setup manual jquery cycle
   $('#preso').cycle({
     timeout: 0
   })
 
-  setupMenu()
+  showMenu()
   if (slidesLoaded) {
     showSlide()
   } else {
@@ -89,17 +92,7 @@ function initializeSlides() {
     slidesLoaded = true
   }
   setupSlideParamsCheck();
-}
-
-function initializePresentation(prefix) {
-  initializeSlides();
   sh_highlightDocument(prefix+'/javascripts/sh_lang/', '.min.js')
-}
-
-function centerSlides(slides) {
-  slides.each(function(s, slide) {
-    centerSlide(slide)
-  })
 }
 
 function centerSlide(slide) {
@@ -112,20 +105,23 @@ function centerSlide(slide) {
   slide_content.css('margin-top', mar_top)
 }
 
-function setupMenu() {
+var menu = null;
+function addToMenu(slide) {
+  var content  = slide.children(".content")
+  var shortTxt = $(content).text().substr(0, 20)
+  var path     = $(content).attr('ref').split('/')
+  menu.currSlide += 1
+  menu.addItem(path, shortTxt, menu.currSlide)
+}
+
+function resetMenu(innerCallback) {
   $('#navmenu').hide();
 
-  var currSlide = 0
-  var menu = new ListMenu()
+  menu = new ListMenu()
+  menu.currSlide = 0
+}
 
-  slides.each(function(s, elem) {
-    content = $(elem).children(".content")
-    shortTxt = $(content).text().substr(0, 20)
-    path = $(content).attr('ref').split('/')
-    currSlide += 1
-    menu.addItem(path, shortTxt, currSlide)
-  })
-
+function showMenu() {
   $('#navigation').html(menu.getList())
   $('#navmenu').menu({
     content: $('#navigation').html(),
@@ -183,7 +179,7 @@ function showSlide(back_step) {
     return
   }
 
-  currentSlide = slides.eq(slidenum)
+  currentSlide = slides[slidenum]
 
   var transition = currentSlide.attr('data-transition')
   var fullPage = currentSlide.find(".content").is('.full-page');
