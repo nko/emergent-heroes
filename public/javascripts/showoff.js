@@ -19,8 +19,9 @@ var shiftKeyActive = false
 
 var loadSlidesBool
 var loadSlidesPrefix
+var loadSlidesJsShPrefix
 
-function setupPreso(load_slides, prefix) {
+function setupPreso(load_slides, slides_prefix, sh_js_prefix) {
   if (preso_started)
   {
      alert("already started")
@@ -29,8 +30,9 @@ function setupPreso(load_slides, prefix) {
   preso_started = true
 
   loadSlidesBool = load_slides
-  loadSlidesPrefix = prefix
-  loadSlides(loadSlidesBool, loadSlidesPrefix)
+  loadSlidesPrefix = slides_prefix
+  loadSlidesJsShPrefix = sh_js_prefix
+  loadSlides(loadSlidesBool, loadSlidesPrefix, loadSlidesJsShPrefix)
 
   doDebugStuff()
 
@@ -42,17 +44,17 @@ function setupPreso(load_slides, prefix) {
   /* window.onunload = unloaded; */
 }
 
-function loadSlides(load_slides, prefix) {
+function loadSlides(load_slides, slides_prefix, sh_js_prefix) {
   //load slides offscreen, wait for images and then initialize
   if (load_slides) {
-  	$("#slides").load("/slides", false, function(){
+  	$("#slides").load(slides_prefix+"/slides", false, function(){
     	$("#slides img").batchImageLoad({
-			loadingCompleteCallback: initializePresentation(prefix)
+			loadingCompleteCallback: initializePresentation(sh_js_prefix)
 		})
   	})
   } else {
 	$("#slides img").batchImageLoad({
-		loadingCompleteCallback: initializePresentation(prefix)
+		loadingCompleteCallback: initializePresentation(sh_js_prefix)
 	})
   }
 }
@@ -82,7 +84,7 @@ function initializePresentation(prefix) {
     slidesLoaded = true
   }
   setupSlideParamsCheck();
-  sh_highlightDocument(prefix+'/js/sh_lang/', '.min.js')
+  sh_highlightDocument(prefix+'/javascripts/sh_lang/', '.min.js')
 }
 
 function centerSlides(slides) {
@@ -349,7 +351,7 @@ function keyDown(event)
     else if (key == 82) // R for reload
     {
       if (confirm('really reload slides?')) {
-        loadSlides(loadSlidesBool, loadSlidesPrefix)
+        loadSlides(loadSlidesBool, loadSlidesPrefix, loadSlidesJsShPrefix)
         showSlide()
       }
     }
@@ -560,7 +562,7 @@ function stopPreShow() {
 	$('#preshow_timer').remove()
 	
 	toggleFooter()
-	loadSlides(loadSlidesBool, loadSlidesPrefix);
+	loadSlides(loadSlidesBool, loadSlidesPrefix, loadSlidesJsShPrefix)
 }
 
 function nextPreShowImage() {
