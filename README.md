@@ -9,14 +9,14 @@ Showoff Time is a hosted presentation server heavily inspired by Showoff.
 
 ## URLS:
 
-* `/p/:name#s1234`
-* `/p/:name/slides` - long HTML listing of all slides
-* `/p/:name/slides.pdf` - PDF listing of all slides
-* `/p/:name/edit` - edit a presentation
-* `/p/:name/:slide_num` - edit a specific slide
-* `/p/:name/images/:filename` - uploaded image
+* `/talks/:name#s1234` - view a talk
+* `/talks/:name/slides` - long HTML listing of all slides
+* `/talks/:name/slides.pdf` - PDF listing of all slides
+* `/talks/:name/edit` - edit a presentation
+* `/talks/:name/:slide_num` - edit a specific slide
+* `/talks/:name/images/:filename` - uploaded image
 * `/create` - create a talk
-* `/talks/:name#s1234` - view a live talk.
+* `/live/:name#s1234` - view a live talk.
 
 ## Development
 
