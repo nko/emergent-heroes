@@ -1,0 +1,10 @@
+var fab = require("./lib/fab")
+
+with(fab)
+(fab)
+  (listen, +process.env.PORT || 0xFAB)
+  (route, /^\/p\/?$/)
+    ("Redirecting to /.", {status: 301, headers: {Location: "/"}})
+  ()
+  ('Hi')
+()
