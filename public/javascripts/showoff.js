@@ -7,7 +7,6 @@ var slidenum = 0
 var slideTotal = 0
 var slides
 var currentSlide
-var totalslides = 0
 var slidesLoaded = false
 var incrSteps = 0
 var incrElem
@@ -48,9 +47,7 @@ function loadSlides(load_slides, slides_prefix, sh_js_prefix) {
   //load slides offscreen, wait for images and then initialize
   if (load_slides) {
   	$("#slides").load(slides_prefix+"/slides", false, function(){
-    	$("#slides img").batchImageLoad({
-			loadingCompleteCallback: initializePresentation(sh_js_prefix)
-		})
+  	  loadSlides(false, null, sh_js_prefix)
   	})
   } else {
 	$("#slides img").batchImageLoad({
@@ -59,17 +56,25 @@ function loadSlides(load_slides, slides_prefix, sh_js_prefix) {
   }
 }
 
-function initializePresentation(prefix) {
-  //center slides offscreen
-  centerSlides($('#slides > .slide'))
+function addSlide(slide) {
+  jSlide = $(slide)
 
-  //copy into presentation area
+  //center slides offscreen
+  centerSlide(jSlide)
+  jSlide.appendTo($('#preso'))
+  slideTotal += 1
+}
+
+function initializeSlides() {
   $("#preso").empty()
-  $('#slides > .slide').appendTo($("#preso"))
+  slideTotal = 0
+
+  $('#slides > .slide').each(function(s, slide) {
+    addSlide(slide)
+  });
 
   //populate vars
   slides = $('#preso > .slide')
-  slideTotal = slides.size()
 
   //setup manual jquery cycle
   $('#preso').cycle({
@@ -84,6 +89,10 @@ function initializePresentation(prefix) {
     slidesLoaded = true
   }
   setupSlideParamsCheck();
+}
+
+function initializePresentation(prefix) {
+  initializeSlides();
   sh_highlightDocument(prefix+'/javascripts/sh_lang/', '.min.js')
 }
 
@@ -94,7 +103,7 @@ function centerSlides(slides) {
 }
 
 function centerSlide(slide) {
-  var slide_content = $(slide).children(".content").first()
+  var slide_content = slide.children(".content").first()
   var height = slide_content.height()
   var mar_top = (0.5 * parseFloat($(slide).height())) - (0.5 * parseFloat(height))
   if (mar_top < 0) {
