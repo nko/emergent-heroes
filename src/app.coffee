@@ -27,14 +27,31 @@ exports.redirect_to = (write, url, status) ->
 #
 # Returns a fab app.
 exports.static = (write, dir, type, ext, name) ->
-  write(undefined, headers: {"Content-Type": type}) (write, head) ->
+  write (write, head) ->
     filename = name || head.url.capture[0]
     if path.extname(filename) != ".#{ext}"
-      filename = "#{name}.#{ext}"
+      filename = "#{filename}.#{ext}"
+    full = "./#{dir}/#{filename}"
+
     fab.stream (stream) ->
-      io = fs.createReadStream "./#{dir}/#{filename}"
-      io.on 'data', (s) -> stream write(s)
-      io.on 'end',  ()  -> stream write()
+      fs.stat full, (err, stats) ->
+        if err
+          stream write(
+            err
+            status: 404
+            headers: {"Content-Type": 'text/plain'}
+          )
+          stream write()
+        else
+          stream write(
+            undefined
+            headers:
+              'Content-Length': stats.size
+              'Content-Type':   type
+          )
+          io = fs.createReadStream full
+          io.on 'data', (s) -> stream write(s)
+          io.on 'end',  ()  -> stream write()
 
 exports.static.html = (write, name) ->
   exports.static write, 'mocks', 'text/html', 'html', name
