@@ -1,5 +1,6 @@
-fab = require("./fab")
-fs  = require('fs')
+fab  = require "./fab"
+path = require 'path'
+fs   = require 'fs'
 
 # Make a temporary redirect to the given url.
 #
@@ -16,18 +17,30 @@ exports.redirect_to = (write, url, status) ->
       status: status, headers: {Location: url}
     )
 
-# Display a mock html page.
+# Renders a static file to the output stream.
 #
 # write - A fab downstream writer.
-# name  - String mock filename.  Reads "../mocks/{{name}}.html".
+# dir   - The String directory to where the file is kept.
+# type  - The String content type of the file.
+# ext   - The String file extension.
+# name  - The String filename.  Add the extension if it doesn't have one already.
 #
 # Returns a fab app.
-exports.mock = (write, name) ->
-  write (write) ->
+exports.static = (write, dir, type, ext, name) ->
+  write(undefined, headers: {"Content-Type": type}) (write, head) ->
+    name ||= head.url.capture[0]
+    if path.extname(name) != ".#{ext}"
+      name = "#{name}.#{ext}"
     fab.stream (stream) ->
-      path = "./mocks/#{name}.html"
-      file = fs.createReadStream path
-      file.on 'data', (chunk) ->
-        stream write(chunk)
-      file.on 'end', () ->
-        stream write()
+      io = fs.createReadStream "./#{dir}/#{name}"
+      io.on 'data', (s) -> stream write(s)
+      io.on 'end',  ()  -> stream write()
+
+exports.static.html = (write, name) ->
+  exports.static write, 'mocks', 'text/html', 'html', name
+
+exports.static.css = (write, name) ->
+  exports.static write, 'public/stylesheets', 'text/css', 'css', name
+
+exports.static.js = (write, name) ->
+  exports.static write, 'public/javascripts', 'text/js', 'js', name
