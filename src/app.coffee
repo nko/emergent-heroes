@@ -44,3 +44,6 @@ exports.static.css = (write, name) ->
 
 exports.static.js = (write, name) ->
   exports.static write, 'public/javascripts', 'text/js', 'js', name
+
+exports.static.png = (write, dir, name) ->
+  exports.static write, dir, "image/png", "png", name
