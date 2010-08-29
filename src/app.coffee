@@ -1,6 +1,7 @@
 fab  = require "./fab"
 path = require 'path'
 fs   = require 'fs'
+Mu   = require 'Mu'
 
 # Make a temporary redirect to the given url.
 #
@@ -16,6 +17,36 @@ exports.redirect_to = (write, url, status) ->
       "Redirecting to <a href=\"" + url + "\"></a>."
       status: status, headers: {Location: url}
     )
+
+# Renders a mustache template to the output stream.
+# 
+# write        - A fab downstream writer.
+# tmpl_name    - The relative String template name, without the extension.
+# dataCallback - A Function that is called with the fab head object and body 
+#                callback.  It should return a mustache view object.
+#
+# Returns a fab app.
+exports.mu = (write, tmpl_name, dataCallback) ->
+  # compiles the mu template before requests are received
+  mu       = null
+  muBuffer = ''
+  io       = fs.createReadStream "./templates/#{tmpl_name}.mu"
+  io.on 'data', (chunk) ->
+    muBuffer += chunk
+  io.on 'end', ->
+    mu       = Mu.compileText muBuffer
+    muBuffer = null
+
+  write (write, head, body) ->
+    fab.stream (stream) ->
+      # get the mustache data
+      data = dataCallback head, body
+      # render the template
+      tmpl = mu data
+      tmpl.on 'data', (chunk) ->
+        stream write(chunk)
+      tmpl.on 'end', ->
+        stream write()
 
 # Renders a static file to the output stream.
 #
