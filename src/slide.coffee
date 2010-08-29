@@ -56,4 +56,16 @@ Slide.parse = (text) ->
             code.innerHTML = lines.join("\n")
       callback doc.toHTML
 
+Slide.previewApp = (write) ->
+  write (write, head, body) ->
+    fab.stream (stream) ->
+      text = ''
+      body (chunk) ->
+        if chunk
+          text += chunk.toString 'utf8'
+        else
+          Slide.parse(text) (html) ->
+            stream write(html)
+            stream write()
+
 exports.Slide = Slide
