@@ -74,7 +74,6 @@ Slide.previewApp = (app) ->
           params = qs.parse(text)
           Slide.parse(params.text || '') (html) ->
             html = "<div>#{html}</div>"
-            console.log html
             stream write(html)
             stream write() # close the stream and continue
 
