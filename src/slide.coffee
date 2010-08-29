@@ -2,14 +2,41 @@ showdown = require('../lib/showdown')
 Apricot  = require('apricot').Apricot
 
 class Slide
-  constructor: (text, options) ->
+  constructor: (text, option_list) ->
     @text    = text
-    @options = options || {}
+    @options = option_list || {}
+    @name    = "section/slide"
 
-  toHTML: () ->
+  toHTML: (num) ->
+    name     = "#{@name}/#{num}"
+    wrapper  = "<div"
+    wrapper += " id=\"#{@options.id}\"" if @options.id
+    wrapper += " class=\"slide\" data-transition=\"#{@options.transition || 'none'}\">"
+    wrapper += "<div class=\"content #{@gatherContentClasses().join " "}\" ref=\"#{name}\">"
     (callback) =>
       Slide.parse(@text) (html) ->
-        callback html
+        callback "#{wrapper}#{html}</div></div>"
+
+  gatherContentClasses: ->
+    classes = []
+    @options.forEach (opt) =>
+      classes.push opt if Slide.validOptions.indexOf(opt) > -1
+    classes
+
+Slide.validOptions = [
+  'center'
+  'full-page'
+  'bullets'
+  'smbullets'
+  'subsection'
+  'command'
+  'commandline'
+  'code'
+  'incremental'
+  'small'
+  'smaller'
+  'execute'
+  ]
 
 Slide.parse = (text) ->
   mkd = showdown.makeHtml text

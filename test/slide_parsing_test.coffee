@@ -22,9 +22,20 @@ yo
 hmm
 '''
 
-slide = new Slide(s)
+slide = new Slide s, ['center']
 slide.toHTML() (html) ->
   Apricot.parse html, (doc) ->
+    found = 0
+    doc.find 'div'
+    doc.each (div) ->
+      found += 1
+      if found == 1
+        assert.equal 'slide', div.className
+      else if found == 2
+        assert.equal 'content center', div.className
+      else
+        assert.fail "too many divs"
+
     doc.find 'h3'
     doc.each (h3) ->
       assert.equal 'TITLE', h3.text.trim()
@@ -38,8 +49,10 @@ slide.toHTML() (html) ->
       found += 1
       if found == 1
         assert.equal 'sh_javascript', pre.className
-      else
+      else if found == 2
         assert.equal "foo bar\nbaz", code.text.trim()
+      else
+        assert.fail 'too many pre\'s'
 
     found = 0
     expected = ['hi there', 'yo', 'hmm']
