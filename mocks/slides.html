@@ -19,3 +19,16 @@
     </p> 
   </div>
 </div>
+
+<div class="slide" data-transition="none">
+  <div class="content javascript smaller" ref="code/code/3"> 
+    <h1>Attempt #1</h1>
+ 
+    <pre class="sh_javascript"><code>// pseudo code, contrived example
+var client = http.createClient()
+var data   = client.get("http://stream.twitter.com/1/statuses/filter.json")
+var tweets = JSON.parse(data)
+for(var tweet in tweets)
+  sys.exec("say " + tweet.text)</code></pre> 
+  </div> 
+</div>
