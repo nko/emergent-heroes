@@ -4,6 +4,10 @@ Apricot  = require('apricot').Apricot
 qs       = require('querystring')
 
 class Slide extends Model
+  # presentation (ID)
+  # number (Integer)
+  # body (String)
+  # options (Array, see Slide.validOptions)
   constructor: (options) ->
     super options
     @name    = "section/slide"
@@ -23,6 +27,14 @@ class Slide extends Model
     @doc.options.forEach (opt) ->
       classes.push opt if Slide.validOptions.indexOf(opt) > -1
     classes
+
+Slide.find = (id, db) ->
+  db ||= Slide.db
+  (callback) ->
+    db.getDoc id, (err, doc) ->
+      doc  ||= {}
+      doc.db = db
+      callback err, new Slide doc
 
 Slide.validOptions = [
   'center'

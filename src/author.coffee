@@ -27,11 +27,12 @@ class Author extends Model
     hash.update Math.random().toString() # shoot me
     hash.digest 'hex'
 
-Author.find = (id) ->
+Author.find = (id, db) ->
+  db ||= Author.db
   (callback) ->
-    Author.db.getDoc id, (err, doc) ->
+    db.getDoc id, (err, doc) ->
       doc  ||= {}
-      doc.db = Author.db
+      doc.db = db
       callback err, new Author doc
 
 Author.hash_password = (salt, pass) ->
