@@ -40,13 +40,15 @@ exports.mu = (write, tmpl_name, dataCallback) ->
   write (write, head, body) ->
     fab.stream (stream) ->
       # get the mustache data
-      data = dataCallback head, body
-      # render the template
-      tmpl = mu data
-      tmpl.on 'data', (chunk) ->
-        stream write(chunk)
-      tmpl.on 'end', ->
-        stream write()
+      callback = (data) ->
+        # render the template
+        tmpl = mu data
+        tmpl.on 'data', (chunk) ->
+          stream write(chunk)
+        tmpl.on 'end', ->
+          stream write()
+      dataCallback callback, head, body
+
 
 # Renders a static file to the output stream.
 #

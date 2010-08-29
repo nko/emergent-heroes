@@ -22,7 +22,7 @@ Showoff Time is a hosted presentation server heavily inspired by Showoff.
 
 ### Presentation
 
-* author (ID)
+* author (String)
 * title (String)
 * published (boolean, default: false)
 

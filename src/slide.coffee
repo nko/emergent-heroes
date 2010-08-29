@@ -1,4 +1,5 @@
 Model    = require './model'
+Presentation = require('./presentation').Presentation
 showdown = require('../vendor/showdown')
 Apricot  = require('apricot').Apricot
 qs       = require('querystring')
@@ -7,13 +8,20 @@ class Slide extends Model
   # presentation (ID)
   # number (Integer)
   # body (String)
+  # html (String)
   # options (Array, see Slide.validOptions)
   constructor: (options) ->
     super options
     @name    = "section/slide"
 
-  toHTML: (num) ->
-    name     = "#{@name}/#{num}"
+  fill: (options) ->
+    super options
+    @doc.options ||= []
+    @doc.type = 'slide'
+    @doc
+
+  toHTML: ->
+    name     = "#{@name}/#{@doc.number || 1}"
     wrapper  = "<div"
     wrapper += " id=\"#{@doc.slide_id}\"" if @doc.slide_id
     wrapper += " class=\"slide\" data-transition=\"none\">"
@@ -35,6 +43,47 @@ Slide.find = (id, db) ->
       doc  ||= {}
       doc.db = db
       callback err, new Slide doc
+
+Slide.list = (presentation, num, db) ->
+  db ||= Slide.db
+  num  = parseInt(num || 0)
+  (callback) ->
+    startkey = null
+    endkey   = null
+    if num == 0 # all slides
+      startkey = [presentation]
+      endkey   = [presentation, 2]
+    else if num == 1 # only first slide
+      startkey = [presentation]
+      endkey   = [presentation, 1, 1]
+    else # only individual slide
+      startkey = [presentation, 1, num]
+      endkey   = startkey
+
+    db.view 'slides', 'by_presentation', 
+      startkey: startkey
+      endkey:   endkey
+      (err, data) ->
+        if data.rows
+          slides = []
+          pres   = null
+          data.rows.forEach (row) ->
+            doc    = row.value
+            doc.db = db
+            if doc.type == 'slide'
+              slides.push new Slide(doc)
+            else if doc.type == 'presentation'
+              pres = new Presentation doc
+          callback slides, pres
+        else
+          callback [], null
+
+Slide.save = (options) ->
+  s = new Slide options
+  (callback) -> 
+    s.toHTML() (html) ->
+      s.doc.html = html
+      s.save() callback
 
 Slide.validOptions = [
   'center'

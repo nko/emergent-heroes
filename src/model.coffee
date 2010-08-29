@@ -25,8 +25,6 @@ class Model
 
   save: ->
     (callback) =>
-      console.log 'saving'
-      console.log @doc
       @db.saveDoc @doc, (err, doc) =>
         @fill doc if !err
         callback err, @

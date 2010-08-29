@@ -19,8 +19,21 @@
           <div class="write"> 
   <h1>{{pres_title}}</h1> 
  
-  <form class="edit_wiki" method="post" action="/edit/Home"> 
-    <div> 
+  <form class="edit_wiki" method="post" action="{{url}}"> 
+    <div>
+    {{#edit_pres}}
+      <label> 
+        Author<br /> 
+        <input class="text" type="text" name="author" value="{{pres_author}}" /> 
+      </label> 
+      <br /> 
+      <label> 
+        Title<br /> 
+        <input class="text" type="text" name="title" value="{{pres_title}}" /> 
+      </label> 
+      <br /> 
+    {{/edit_pres}}
+
       <div id="wiki-form" class="comment-form wiki-form"> 
         <ul class="tabs inline-tabs"> 
           <li><a href="#write_bucket" action="write">Write</a></li> 
@@ -28,7 +41,7 @@
         </ul> 
         <div id="write_bucket" class="tab-content"> 
           <div class="inner"> 
-            <textarea name="content">{{body}}</textarea> 
+            <textarea name="body">{{body}}</textarea> 
           </div> 
         </div> 
         <div id="preview_bucket" class="tab-content content-body content wikistyle gollum"> 
@@ -37,6 +50,7 @@
       </div> 
 
       <div class="actions"> 
+        <input type="hidden" name="number" value="{{number}}"></input>
         <input type="submit" value="Save" /> 
       </div> 
     </div> 

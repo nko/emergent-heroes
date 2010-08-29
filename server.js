@@ -1,5 +1,9 @@
 var fab = require("./vendor/fab")
   , app = require('./lib/app')
+  , sys = require('sys')
+  , qs  = require('querystring')
+  , Slide = require('./lib/slide').Slide
+  , Presentation = require('./lib/presentation').Presentation
 
 with(fab)
 (fab)
@@ -27,7 +31,42 @@ with(fab)
   ()
 
   (route, /^\/create/)
-    (app.static.html, 'create')
+    (method.POST)
+      (function (app) {
+        return app(function(write, head, body) {
+          return fab.stream(function(stream) {
+            var s = ''
+            body(function(chunk) {
+              if(chunk) {
+                s += chunk
+              } else {
+                var params = qs.parse(s)
+                var db = Model.couch.db('slides')
+                Presentation.save(
+                { db: db
+                , author: params.author || "Anonymous"
+                , title:  params.title  || "Untitled"
+                })(function(err, pres) {
+                  Slide.save(
+                  { db: db
+                  , presentation: pres.id
+                  , number: params.number || 1
+                  , body: params.body
+                  })(function(err, s) {
+                    stream(write(sys.inspect(params) + "\n\n"))
+                    stream(write(sys.inspect(s)))
+                    stream(write())
+                  })
+                })
+              }
+            })
+          })
+        })
+      })
+    ()
+    (app.mu, 'form', function(cb, head) {
+      cb({edit_pres: true, number: 1})
+    })
   ()
 
   (route, /^\/favicon.ico$/)
