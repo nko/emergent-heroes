@@ -20,7 +20,7 @@ class Slide
 
   gatherContentClasses: ->
     classes = []
-    @options.forEach (opt) =>
+    @options.forEach (opt) ->
       classes.push opt if Slide.validOptions.indexOf(opt) > -1
     classes
 
@@ -39,6 +39,7 @@ Slide.validOptions = [
   'execute'
   ]
 
+# Converts the given markdown string to HTML.
 Slide.parse = (text) ->
   mkd = showdown.makeHtml text
 
