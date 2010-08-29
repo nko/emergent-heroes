@@ -37,7 +37,8 @@ Showoff Time is a hosted presentation server heavily inspired by Showoff.
 
 * name
 * email
-* password
+* salt
+* hash
 
 ## Development
 
