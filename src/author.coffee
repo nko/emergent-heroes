@@ -1,9 +1,7 @@
-crypto = require('crypto')
+crypto = require 'crypto'
+Model  = require './model'
 
-class Author
-  constructor: (options) ->
-    @fill options
-
+class Author extends Model
   # id    - The String CouchDB ID.
   # rev   - The String CouchDB revision.
   # name  - The String name for the author.
@@ -11,21 +9,8 @@ class Author
   # salt  - The String salt for hashing the password.
   # hash  - A String hashed password.
   fill: (options) ->
-    @id  = options._id
-    @rev = options._rev
-    @db  = options.db || Author.db
-    delete options.db
-    delete options._id
-    delete options._rev
-    @doc = options
-    @doc.salt ||= @generate_salt()
-    @doc
-
-  save: ->
-    (callback) =>
-      @db.saveDoc @doc, (err, doc) =>
-        @fill doc if !err
-        callback err, @
+    @db = options.db || Author.db
+    super options
 
   set_password: (pass) ->
     @doc.hash = Author.hash_password @doc.salt, pass

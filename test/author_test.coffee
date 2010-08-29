@@ -10,4 +10,3 @@ author.set_password "secret"
 
 assert.equal true,  author.authenticates('secret'), "Valid password doesn't match"
 assert.equal false, author.authenticates('foo'),    "Invalid password matches"
-  
