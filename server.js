@@ -1,7 +1,5 @@
-require.paths.unshift('./lib')
-
-var fab = require("fab")
-  , app = require('app')
+var fab = require("./vendor/fab")
+  , app = require('./lib/app')
 
 with(fab)
 (fab)

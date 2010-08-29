@@ -1,7 +1,7 @@
-fab  = require "./fab"
+fab  = require "../vendor/fab"
 path = require 'path'
 fs   = require 'fs'
-Mu   = require 'Mu'
+Mu   = require '../vendor/Mu'
 
 # Make a temporary redirect to the given url.
 #

@@ -1,4 +1,4 @@
-showdown = require('../lib/showdown')
+showdown = require('../vendor/showdown')
 Apricot  = require('apricot').Apricot
 qs       = require('querystring')
 
