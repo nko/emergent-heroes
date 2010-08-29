@@ -18,6 +18,27 @@ Showoff Time is a hosted presentation server heavily inspired by Showoff.
 * `/preview` - render the current data and return it
 * `/live/:name#s1234` - view a live talk.
 
+## Model
+
+### Presentation
+
+* author (ID)
+* title (String)
+* published (boolean, default: false)
+
+### Slide
+
+* presentation (ID)
+* number (Integer)
+* body (String)
+* options (Array, see Slide.validOptions)
+
+### Author
+
+* name
+* email
+* password
+
 ## Development
 
 Run this in the main directory to compile coffeescript to javascript as you go:
