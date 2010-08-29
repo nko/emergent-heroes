@@ -11,6 +11,8 @@ class Author extends Model
   fill: (options) ->
     @db = options.db || Author.db
     super options
+    @doc.salt ||= @generate_salt()
+    @doc
 
   set_password: (pass) ->
     @doc.hash = Author.hash_password @doc.salt, pass

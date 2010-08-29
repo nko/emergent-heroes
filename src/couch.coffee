@@ -2,7 +2,7 @@ couchdb = require '../vendor/node-couchdb/lib/couchdb'
 fs      = require 'fs'
 path    = require 'path'
 
-detail_path = path.join __dirname, process.env.SHOWOFF_TIME_DB || "../secret.js"
+detail_path = process.env.SHOWOFF_TIME_DB || "../secret.js"
 
 try
   stats = fs.statSync detail_path

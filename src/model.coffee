@@ -21,7 +21,6 @@ class Model
     delete options._rev
     for key, value of options
       @doc[key] ||= options[key]
-    @doc.salt ||= @generate_salt()
     @doc
 
   save: ->

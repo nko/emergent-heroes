@@ -22,7 +22,7 @@ yo
 hmm
 '''
 
-slide = new Slide s, ['center']
+slide = new Slide body: s, options: ['center']
 slide.toHTML() (html) ->
   Apricot.parse html, (doc) ->
     found = 0

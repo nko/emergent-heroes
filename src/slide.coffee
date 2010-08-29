@@ -1,26 +1,26 @@
+Model    = require './model'
 showdown = require('../vendor/showdown')
 Apricot  = require('apricot').Apricot
 qs       = require('querystring')
 
-class Slide
-  constructor: (text, option_list) ->
-    @text    = text
-    @options = option_list || {}
+class Slide extends Model
+  constructor: (options) ->
+    super options
     @name    = "section/slide"
 
   toHTML: (num) ->
     name     = "#{@name}/#{num}"
     wrapper  = "<div"
-    wrapper += " id=\"#{@options.id}\"" if @options.id
-    wrapper += " class=\"slide\" data-transition=\"#{@options.transition || 'none'}\">"
+    wrapper += " id=\"#{@doc.slide_id}\"" if @doc.slide_id
+    wrapper += " class=\"slide\" data-transition=\"none\">"
     wrapper += "<div class=\"content #{@gatherContentClasses().join " "}\" ref=\"#{name}\">"
     (callback) =>
-      Slide.parse(@text) (html) ->
+      Slide.parse(@doc.body) (html) ->
         callback "#{wrapper}#{html}</div></div>"
 
   gatherContentClasses: ->
     classes = []
-    @options.forEach (opt) ->
+    @doc.options.forEach (opt) ->
       classes.push opt if Slide.validOptions.indexOf(opt) > -1
     classes
 
