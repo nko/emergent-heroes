@@ -10,29 +10,6 @@ class Presentation extends Model
     @doc.type = 'presentation'
     @doc
 
-  slides: (num) ->
-    num = parseInt(num || 0)
-    (callback) =>
-      startkey = null
-      endkey   = null
-      if num == 0 # all slides
-        startkey = [@id]
-        endkey   = [@id, 2]
-      else if num == 1 # only first slide
-        startkey = [@id]
-        endkey   = [@id, 1, 1]
-      else # only individual slide
-        startkey = [@id, 1, num]
-        endkey   = startkey
-
-      @db.view 'slides', 'by_presentation', 
-        startkey: startkey
-        endkey:   endkey
-        (err, data) ->
-          if data.rows
-            data.rows.forEach
-          console.log err, data
-
 Presentation.find = (id, db) ->
   db ||= Presentation.db
   (callback) ->
