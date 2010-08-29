@@ -1,5 +1,6 @@
 showdown = require('../lib/showdown')
 Apricot  = require('apricot').Apricot
+qs       = require('querystring')
 
 class Slide
   constructor: (text, option_list) ->
@@ -70,7 +71,10 @@ Slide.previewApp = (app) ->
         else
           # no data, assume the request has stopped sending data.
           # convert text to showoff markdown html and write it back.
-          Slide.parse(text) (html) ->
+          params = qs.parse(text)
+          Slide.parse(params.text || '') (html) ->
+            html = "<div>#{html}</div>"
+            console.log html
             stream write(html)
             stream write() # close the stream and continue
 

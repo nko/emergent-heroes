@@ -1,6 +1,6 @@
 $(function(){
   $('#wiki-form').previewableCommentForm({
-    previewUrl: "/preview"
+    previewUrl: "/talks/preview"
   })
   $('ul.inline-tabs').tabs();
 });
