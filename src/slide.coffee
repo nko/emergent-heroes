@@ -56,16 +56,22 @@ Slide.parse = (text) ->
             code.innerHTML = lines.join("\n")
       callback doc.toHTML
 
-Slide.previewApp = (write) ->
-  write (write, head, body) ->
+# An extracted fab app for converting incoming text to markdown.
+Slide.previewApp = (app) ->
+  # call app with a reference to the downstream app, the request head, and body.
+  app (write, head, body) ->
     fab.stream (stream) ->
       text = ''
+      # body takes a callback that is called on request.data and request.end 
+      # events.
       body (chunk) ->
         if chunk
           text += chunk.toString 'utf8'
         else
+          # no data, assume the request has stopped sending data.
+          # convert text to showoff markdown html and write it back.
           Slide.parse(text) (html) ->
             stream write(html)
-            stream write()
+            stream write() # close the stream and continue
 
 exports.Slide = Slide
